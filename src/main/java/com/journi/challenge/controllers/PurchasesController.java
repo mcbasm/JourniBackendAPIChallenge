@@ -21,15 +21,10 @@ import java.util.List;
 public class PurchasesController {
 
     // Instance of Currency Converter Class
-    private CurrencyConverter cc = new CurrencyConverter();
+    private final CurrencyConverter cc = new CurrencyConverter();
 
     @Inject
     private PurchasesRepository purchasesRepository;
-
-    @GetMapping("/purchases")
-    public List<Purchase> getPurchases() {
-        return purchasesRepository.list();
-    }
 
     @GetMapping("/purchases/statistics")
     public PurchaseStats getStats() {

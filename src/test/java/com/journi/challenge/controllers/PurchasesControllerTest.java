@@ -97,4 +97,18 @@ class PurchasesControllerTest {
         assertEquals(10.0, purchaseStats.getMinAmount());
         assertEquals(89.0, purchaseStats.getMaxAmount());
     }
+
+    @Test
+    public void testPurchaseNoCurrencyCodeMustUseEUR() throws Exception {
+        String body = getPurchaseJson("2", "customer 2", "2020-01-01T10:00:00+01:00", 234.00, null, "product2");
+        mockMvc.perform(post("/purchases")
+                .contentType(MediaType.APPLICATION_JSON).content(body)
+        ).andExpect(status().isOk());
+
+        Purchase savedPurchase = purchasesRepository.list().get(purchasesRepository.list().size() - 1);
+        assertEquals("customer 2", savedPurchase.getCustomerName());
+        assertEquals("2", savedPurchase.getInvoiceNumber());
+        assertEquals("2020-01-01T10:00:00", savedPurchase.getTimestamp().format(DateTimeFormatter.ISO_DATE_TIME));
+        assertEquals(234.00, savedPurchase.getTotalValue());
+    }
 }

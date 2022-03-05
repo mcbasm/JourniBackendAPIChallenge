@@ -39,14 +39,12 @@ public class PurchasesRepository {
                 .sorted(Comparator.comparing(Purchase::getTimestamp))
                 .collect(Collectors.toList());
 
-        long countPurchases = recentPurchases.size();
-        double totalAmountPurchases = recentPurchases.stream().mapToDouble(Purchase::getTotalValue).sum();
         return new PurchaseStats(
-                formatter.format(recentPurchases.get(0).getTimestamp()),
-                formatter.format(recentPurchases.get(recentPurchases.size() - 1).getTimestamp()),
-                countPurchases,
-                totalAmountPurchases,
-                totalAmountPurchases / countPurchases,
+                recentPurchases.get(0).getTimestamp().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDate().toString(),
+                recentPurchases.get(recentPurchases.size() - 1).getTimestamp().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDate().toString(),
+                (long) recentPurchases.size(),
+                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).sum(),
+                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).average().orElse(0.0),
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0),
                 // It returned min instead of max value
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).max().orElse(0.0)

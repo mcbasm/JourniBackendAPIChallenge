@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductsRepository {
 
     // Instance of Currency Converter Class
-    private CurrencyConverter cc=new CurrencyConverter();
+    private final CurrencyConverter cc=new CurrencyConverter();
 
     private List<Product> allProducts = new ArrayList<>();
     {
@@ -32,7 +32,6 @@ public class ProductsRepository {
     // Calculate the prices on the local currency set by the countryCode field
     public List<Product> listWithLocalPrices(String countryCode) {
         List<Product> productsWithPrices=new ArrayList<>();
-
 
         allProducts.stream().map(p->(Product)p).forEach(p->{
             // Get the value in the local currency of the purchase
