@@ -66,9 +66,9 @@ class PurchasesControllerTest {
     @Test
     public void testPurchaseStatistics() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime firstDate = now.minusDays(30);
+        LocalDateTime firstDate = now.minusDays(20);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE.withZone(ZoneId.of("UTC"));
-        // Inside window purchases
+        // Inside window purchases (modified values to find bug in min-max values)
         purchasesRepository.save(new Purchase("1", firstDate, Collections.emptyList(), "", 10.0));
         purchasesRepository.save(new Purchase("1", firstDate.plusDays(1), Collections.emptyList(), "", 10.0));
         purchasesRepository.save(new Purchase("1", firstDate.plusDays(2), Collections.emptyList(), "", 23.0));

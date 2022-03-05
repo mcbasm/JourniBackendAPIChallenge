@@ -10,7 +10,13 @@ public class Product {
     private final String id;
     private final String description;
     private final Double price;
+    // Added field to get the currencyCode of the product and show it on the response of the API request
     private final String currencyCode;
+
+    // Added new Constructor to support current implementation of the ProductsRepository class (filling the list with products)
+    public Product(String id, String description, Double price) {
+        this(id,description,price,"EUR");
+    }
 
     public Product(String id, String description, Double price, String currencyCode) {
         this.id = id;

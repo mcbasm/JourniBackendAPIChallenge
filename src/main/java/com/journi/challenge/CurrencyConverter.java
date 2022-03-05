@@ -46,6 +46,7 @@ public class CurrencyConverter {
         return supportedCountriesCurrency.getOrDefault(countryCode.toUpperCase(), "EUR");
     }
 
+    // Method to get the value in EUR of a specific currency sent
     public Double convertCurrencyToEur(String currencyCode, Double value){
         return value / currencyEurRate.getOrDefault(currencyCode, 1.0);
     }

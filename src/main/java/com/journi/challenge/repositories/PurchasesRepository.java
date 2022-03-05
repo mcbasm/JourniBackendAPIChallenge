@@ -29,8 +29,6 @@ public class PurchasesRepository {
     }
 
     public PurchaseStats getLast30DaysStats() {
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE.withZone(ZoneId.of("UTC"));
-
         LocalDateTime start = LocalDate.now().atStartOfDay().minusDays(30);
 
         List<Purchase> recentPurchases = allPurchases
@@ -44,9 +42,10 @@ public class PurchasesRepository {
                 recentPurchases.get(recentPurchases.size() - 1).getTimestamp().atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneId.of("UTC")).toLocalDate().toString(),
                 (long) recentPurchases.size(),
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).sum(),
+                // Streams have the average() function, so it's unnecessary to use other variable to get it
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).average().orElse(0.0),
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0),
-                // It returned min instead of max value
+                // Bug Fixed: It returned min instead of max value
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).max().orElse(0.0)
         );
     }
