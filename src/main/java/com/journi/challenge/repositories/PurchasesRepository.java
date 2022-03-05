@@ -4,6 +4,7 @@ import com.journi.challenge.models.Purchase;
 import com.journi.challenge.models.PurchaseStats;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjuster;
@@ -47,7 +48,8 @@ public class PurchasesRepository {
                 totalAmountPurchases,
                 totalAmountPurchases / countPurchases,
                 recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0),
-                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0)
+                // It returned min instead of max value
+                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).max().orElse(0.0)
         );
     }
 }

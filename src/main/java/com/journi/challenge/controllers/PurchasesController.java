@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -36,13 +38,18 @@ public class PurchasesController {
 
     @PostMapping("/purchases")
     public Purchase save(@RequestBody PurchaseRequest purchaseRequest) {
+        // Get the value in the local currency of the purchase
+        Double amountInCurrency = cc.convertCurrencyToEur(purchaseRequest.getCurrencyCode() != null ? purchaseRequest.getCurrencyCode() : "EUR", purchaseRequest.getAmount());
+
+        // Round the amount to two places always
+        BigDecimal amountInDecimal = new BigDecimal(amountInCurrency);
 
         Purchase newPurchase = new Purchase(
                 purchaseRequest.getInvoiceNumber(),
                 LocalDateTime.parse(purchaseRequest.getDateTime(), DateTimeFormatter.ISO_DATE_TIME),
                 purchaseRequest.getProductIds(),
                 purchaseRequest.getCustomerName(),
-                cc.convertCurrencyToEur(purchaseRequest.getCurrencyCode() != null ? purchaseRequest.getCurrencyCode() : "EUR", purchaseRequest.getAmount())
+                amountInDecimal.setScale(2, RoundingMode.HALF_UP).doubleValue()
         );
         purchasesRepository.save(newPurchase);
         return newPurchase;
