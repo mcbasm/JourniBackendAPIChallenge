@@ -34,6 +34,7 @@ public class ProductsRepository {
     public List<Product> listWithLocalPrices(String countryCode) {
         List<Product> productsWithPrices = new ArrayList<>();
 
+        // Because all the products values are final, we create a new list to be filled with the prices per country
         allProducts.stream().map(p -> (Product) p).forEach(p -> {
             // Get the value in the local currency of the purchase
             Double amountInCurrency = cc.convertEurToCurrency(cc.getCurrencyForCountryCode(countryCode), p.getPrice());
@@ -43,6 +44,7 @@ public class ProductsRepository {
             Product newProduct = new Product(p.getId(), p.getDescription(),
                     // Round the value always to 2 decimals
                     amountInDecimal.setScale(2, RoundingMode.HALF_UP).doubleValue(),
+                    // Get the CurrencyCode
                     cc.getCurrencyForCountryCode(countryCode));
             productsWithPrices.add(newProduct);
         });

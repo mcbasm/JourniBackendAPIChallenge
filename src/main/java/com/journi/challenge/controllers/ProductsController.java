@@ -19,6 +19,7 @@ public class ProductsController {
 
     @GetMapping("/products")
     public List<Product> list(@RequestParam(name = "countryCode", defaultValue = "AT") String countryCode) {
+        // Replaced listing method to include prices per country
         return productsRepository.listWithLocalPrices(countryCode);
     }
 }

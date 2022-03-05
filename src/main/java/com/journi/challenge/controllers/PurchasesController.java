@@ -39,7 +39,7 @@ public class PurchasesController {
     @PostMapping("/purchases")
     public Purchase save(@RequestBody PurchaseRequest purchaseRequest) {
         try {
-            // Get the value in the local currency of the purchase
+            // Get the value in the local currency of the purchase (if the request doesn't have a currency, it uses EUR by default)
             Double amountInCurrency = cc.convertCurrencyToEur(purchaseRequest.getCurrencyCode() != null ? purchaseRequest.getCurrencyCode() : "EUR", purchaseRequest.getAmount());
 
             // Create a BigDecimal to round the double
@@ -53,6 +53,7 @@ public class PurchasesController {
                     // Round the value always to 2 places
                     amountInDecimal.setScale(2, RoundingMode.HALF_UP).doubleValue()
             );
+            // Save the purchase with the new values
             purchasesRepository.save(newPurchase);
             return newPurchase;
         } catch (Exception ex) {
